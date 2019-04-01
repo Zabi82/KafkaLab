@@ -48,6 +48,16 @@ cd <kafka_installation_folder>/bin/windows    (For Linux cd <kafka_installation_
 kafka-server-start.bat ../../config/server.properties (For Linux, use the .sh file from bin directory with correct relative path to config file)
 	
 	
+### Exercises/Lab
+
+Download / clone this project 
+
+Import the project into Eclipse or your favourite IDE
+
+Perform a maven install from Eclipse or from Command prompt (mvn clean install) to download the maven dependencies (enables to work offline)
+
+
+
 
 
 
