@@ -36,17 +36,15 @@ Unzip the tgz file using 7zip or using tar -xzf kafka_2.12-2.2.0.tgz
 
 #### Start Zookeeper
 
-Start Zookeeper Server
+cd <kafka_installation_folder>/bin/windows    (For Linux cd <kafka_installation_folder>/bin)	
    
-   cd <kafka_installation_folder>/bin/windows    (For Linux cd <kafka_installation_folder>/bin)	
-   
-   zookeeper-server-start.bat ../../config/zookeeper.properties (For Linux, use the .sh file from bin directory with correct relative path to config file)
+zookeeper-server-start.bat ../../config/zookeeper.properties (For Linux, use the .sh file from bin directory with correct relative path to config file)
 
 #### Start Kafka Broker
 
-Start Kafka Broker 
-	cd <kafka_installation_folder>/bin/windows    (For Linux cd <kafka_installation_folder>/bin)
-	kafka-server-start.bat ../../config/server.properties (For Linux, use the .sh file from bin directory with correct relative path to config file)
+
+cd <kafka_installation_folder>/bin/windows    (For Linux cd <kafka_installation_folder>/bin)
+kafka-server-start.bat ../../config/server.properties (For Linux, use the .sh file from bin directory with correct relative path to config file)
 	
 	
 
