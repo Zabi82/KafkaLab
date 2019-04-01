@@ -44,6 +44,7 @@ zookeeper-server-start.bat ../../config/zookeeper.properties (For Linux, use the
 
 
 cd <kafka_installation_folder>/bin/windows    (For Linux cd <kafka_installation_folder>/bin)
+
 kafka-server-start.bat ../../config/server.properties (For Linux, use the .sh file from bin directory with correct relative path to config file)
 	
 	
