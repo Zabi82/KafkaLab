@@ -42,13 +42,162 @@ zookeeper-server-start.bat ../../config/zookeeper.properties (For Linux, use the
 
 #### Start Kafka Broker
 
-
 cd <kafka_installation_folder>/bin/windows    (For Linux cd <kafka_installation_folder>/bin)
 
 kafka-server-start.bat ../../config/server.properties (For Linux, use the .sh file from bin directory with correct relative path to config file)
+
+### Exercise 1 - Kafka Command Line Producer & Consumer (Simple messages)
+
+#### Command line producer 
+
+Open a command prompt / shell and cd to <KAFKA_HOME>/bin/windows (<KAFKA_HOME>/bin in case of Linux) and type the below command
+
+```
+
+ kafka-console-producer --broker-list localhost:9092 --topic My_Topic
+
+```
+
+Type the messages to be sent to the topic in the prompt 
+
+Here the topics are automatically created since it's not present already
+
+#### Command line consumer 
+
+Open another command prompt / shell and cd to <KAFKA_HOME>/bin/windows (<KAFKA_HOME>/bin in case of Linux) and type the below command
+
+```
+
+ kafka-console-consumer --bootstrap-server localhost:9092 --from-beginning --topic My_Topic
+
+```
+
+Observe that the messages typed in producer console are being consumed by the consumer
+
+Type more messages in the producer console and observe that being consumed by the consumer
+
+Stop and re-run the consumer and observe that it consumes messages from beginning
+
+Also try to stop the consumer again and now re-run the consumer without the --from-beginning option 
+and observe that it doesn't consume anything unless you type new messages in the producer prompt
+
+### Exercise 2 - Kafka Command Line Producer & Consumer (Messages with key and values)
+
+By default, kafka-console-producer and kafka-console-consumer assumes null keys for the messages. 
+It is possible to write and read with keys as well as values. Re-run the Producer with additional arguments to write (key,value) pairs to the Topic
+
+Run a command line producer to inject messages with key and values as given below
+
+```
+
+ kafka-console-producer --broker-list localhost:9092 --topic My_Topic_KV --property parse.key=true --property key.separator=,
+
+```
+
+Type messages with keys and values separated by commas
+
+```
+> 1,Java
+> 2,.Net
+> 3,Python
+> 4,Go
+
+```
+
+Run another command line to consumer the key value pairs produced by the producer
+
+```
+kafka-console-consumer --bootstrap-server localhost:9092 --from-beginning --topic My_Topic_KV --property print.key=true
+
+```
+
+Observe the messages being displayed with key and value. Without the --property print.key=true , only the value will get printed
+
+### Exercise 3 - Creating topics with Partitions & Replication factor and see ordering in consumer side
+
+Create a topic manually using command line tool with 2 partitions
+
+```
+
+kafka-topics --zookeeper localhost:2181 --create --topic My_Topic_P2 --partitions 2 --replication-factor 1
+
+```
+Run a command line producer for the above topic and type messages from 1 to 10
+
+```
+kafka-console-producer --broker-list localhost:9092 --topic My_Topic_P2
+
+>1
+>2
+>3
+.
+.
+>10
+
+```
+
+Run a command line consumer to consume above messages
+
+```
+
+kafka-console-consumer --bootstrap-server localhost:9092 --from-beginning --topic My_Topic_P2
+ 
+```
+
+Observe that the messages are not consumed in the same order in which it is produced. This is because the consumer consumes set of messages 
+from each of the 2 partitions of the topic and ordering is guaranteed only within a partition
+
+### Exercise 4 - Describe details of a topics
+
+Describe the details of the topic created in the previous exercises
+
+```
+
+kafka-topics --describe --bootstrap-server localhost:9092 --topic My_Topic_P2
+
+```
+Partition 0 & 1 represents the 2 partitions
+
+Leader 0 indicates the leader for both the partitions are present in the broker with id 0( Refer server.properties , broker.id = 0) 
+
+Replication 0 indicates the replica for the parition also resides in the broker with id 0
+
+### Exercise 5 - Zookeeper Shell
+
+Kafka’s data in ZooKeeper can be accessed using the zookeeper-shell command:
+
+```
+zookeeper-shell localhost:2181
+
+```
+
+From within the zookeeper-shell application, type ls / to view the directory structure in ZooKeeper. 
+
+```
+ls /
+
+	[schema_registry, cluster, controller_epoch, controller, brokers, zookeeper, admin,
+	isr_change_notification, consumers, config]
+
+ls /brokers
+
+    [ids, topics, seqid]
 	
+ls /brokers/ids
+   
+    [0]
 	
-### Exercises/Lab
+ls /brokers/topics
+
+    [My_Topic, __consumer_offsets, My_Topic_KV]	
+
+```
+
+__consumer_offsets is a special topic which keeps tracks of the consumer offsets for different topics/partitions
+
+Press Ctrl + C to exit the shell
+
+### Exercise 6 - Producer & Consumer using Kafka Java Client
 
 Download / clone this project 
 
