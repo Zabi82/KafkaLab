@@ -1,4 +1,4 @@
-package com.kafka.lab.helloworld;
+package com.kafka.lab.helloworld.partial;
 
 import java.util.Properties;
 

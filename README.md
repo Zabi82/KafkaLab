@@ -197,13 +197,16 @@ __consumer_offsets is a special topic which keeps tracks of the consumer offsets
 
 Press Ctrl + C to exit the shell
 
-### Exercise 6 - Producer & Consumer using Kafka Java Client
+### Exercise 6 - Simple Producer & Consumer using Kafka Java Client
 
 Download / clone this project 
 
 Import the project into Eclipse or your favourite IDE
 
-Perform a maven install from Eclipse or from Command prompt (mvn clean install) to download the maven dependencies (enables to work offline)
+Create a new topic "hello_world_topic" with 2 partitions and replication factor 1 
+
+Write a java producer and consumer programs to produce and consume from the above topic. Refer to the partial java classes and the full solution 
+under com.kafka.lab.helloworld.partial and com.kafka.lab.helloworld.solution packages
 
 
 
