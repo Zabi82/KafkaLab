@@ -90,7 +90,8 @@ Run a command line producer to inject messages with key and values as given belo
 
 ```
 
- kafka-console-producer --broker-list localhost:9092 --topic My_Topic_KV --property parse.key=true --property key.separator=,
+ kafka-console-producer --broker-list localhost:9092 --topic My_Topic_KV 
+ --property parse.key=true --property key.separator=,
 
 ```
 
@@ -107,7 +108,8 @@ Type messages with keys and values separated by commas
 Run another command line to consumer the key value pairs produced by the producer
 
 ```
-kafka-console-consumer --bootstrap-server localhost:9092 --from-beginning --topic My_Topic_KV --property print.key=true
+kafka-console-consumer --bootstrap-server localhost:9092 --from-beginning 
+--topic My_Topic_KV --property print.key=true
 
 ```
 
@@ -208,11 +210,16 @@ Create a new topic "hello_world_topic" with 2 partitions and replication factor 
 Write a java producer and consumer programs to produce and consume from the above topic. Refer to the partial java classes and the full solution 
 under com.kafka.lab.helloworld.partial and com.kafka.lab.helloworld.solution packages
 
+Try to run the consumer with different consumer group id and observe that the new consumer gets a complete copy of the messages
 
+Stop the consumer and run the producer once again to inject new messages in the topic. Before starting the consumer again run below command 
+to check the offsets for each partition and the lag for the consumer
 
+```
 
+kafka-consumer-groups --bootstrap-server localhost:9092 --describe --group testgroup
 
-
-
-
+```
  
+Now run the consumer again and recheck the above command and notice that the lag is now 0 in both partitions 
+as all messages are consumed
