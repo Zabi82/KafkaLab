@@ -208,7 +208,7 @@ Import the project into Eclipse or your favourite IDE
 Create a new topic "hello_world_topic" with 2 partitions and replication factor 1 
 
 Write a java producer and consumer programs to produce and consume from the above topic. Refer to the partial java classes and the full solution 
-under com.kafka.lab.helloworld.partial and com.kafka.lab.helloworld.solution packages
+under com.kafka.lab.helloworld.partial and com.kafka.lab.helloworld.solution packages respectively
 
 Try to run the consumer with different consumer group id and observe that the new consumer gets a complete copy of the messages
 
@@ -223,3 +223,15 @@ kafka-consumer-groups --bootstrap-server localhost:9092 --describe --group testg
  
 Now run the consumer again and recheck the above command and notice that the lag is now 0 in both partitions 
 as all messages are consumed
+
+
+### Exercise 7 - Kafka Streaming Example
+
+Load sample weather data from resources/weather-data.csv (key value pair of date and temperature in celsius) to a topic daily_temperature_celsius
+(Run StreamProducer.java in com.kafka.lab.stream.solution package)
+
+Using Kafka Stream convert the celsius value farenheit and write results to a new topic daily_temperature_farenheit
+
+Filter all temperatures greater than 31 degree celsius and write to new topic hot_days
+
+Refer to the partial java classes and the full solution in com.kafka.lab.stream.partial and com.kafka.lab.stream.soluton packages respectively
