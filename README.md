@@ -230,8 +230,10 @@ as all messages are consumed
 Load sample weather data from resources/weather-data.csv (key value pair of date and temperature in celsius) to a topic daily_temperature_celsius
 (Run StreamProducer.java in com.kafka.lab.stream.solution package)
 
-Using Kafka Stream convert the celsius value farenheit and write results to a new topic daily_temperature_farenheit
+Using Kafka Streams, convert the celsius value to farenheit and write results to a new topic daily_temperature_farenheit (value should be Double)
 
-Filter all temperatures greater than 31 degree celsius and write to new topic hot_days
+Also filter all temperatures greater than 31 degree celsius and write to new topic hot_days 
 
 Refer to the partial java classes and the full solution in com.kafka.lab.stream.partial and com.kafka.lab.stream.soluton packages respectively
+
+Write Consumers for the topics and inspect the data
