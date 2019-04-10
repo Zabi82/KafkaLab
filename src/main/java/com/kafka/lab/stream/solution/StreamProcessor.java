@@ -9,6 +9,7 @@ import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.Produced;
 import org.apache.kafka.streams.kstream.ValueMapper;
 
@@ -58,9 +59,12 @@ public class StreamProcessor {
 		KStream<String, String> hot_days = tempCelsius
 				.filter((k, v) -> new BigDecimal(v).compareTo(new BigDecimal(31)) > 0);
 
-		// Write the hot temperatures to topic hot_days
-		hot_days.to("hot_days");
-
+		// Write the hot temperatures to topic hot_days and print results
+		hot_days.through("hot_days").foreach((k, v) -> {
+			System.out.println(k.toString() + " - " + v.toString());
+		});
+		
+		
 		KafkaStreams streams = new KafkaStreams(builder.build(), streamsConfiguration);
 
 		streams.start();

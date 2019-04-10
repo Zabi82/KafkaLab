@@ -149,6 +149,19 @@ kafka-console-consumer --bootstrap-server localhost:9092 --from-beginning --topi
 Observe that the messages are not consumed in the same order in which it is produced. This is because the consumer consumes set of messages 
 from each of the 2 partitions of the topic and ordering is guaranteed only within a partition
 
+Try to consume from 3 command line consumer windows with same consumer group id and observe that only two receives data as we have only two partitions
+
+```
+
+kafka-console-consumer --bootstrap-server localhost:9092 --from-beginning --topic My_Topic_P2 --group MyGroup
+ 
+```
+
+The 3rd consumer within the consumer group won't be receiving messages.
+Try to stop the 1st or 2nd consumer window and observe that now the 3rd consumer is assigned the partition earlier read by the stopped consumer
+
+
+
 ### Exercise 4 - Describe details of a topics
 
 Describe the details of the topic created in the previous exercises
@@ -237,3 +250,21 @@ Also filter all temperatures greater than 31 degree celsius and write to new top
 Refer to the partial java classes and the full solution in com.kafka.lab.stream.partial and com.kafka.lab.stream.soluton packages respectively
 
 Write Consumers for the topics and inspect the data
+
+### DIY Exercises
+
+1) Write a consumer which consumes all messages from a Topic whenever it is started
+
+2) Setup a 3 node cluster within your local machine and verify your understanding of replication
+
+3) Implement a CustomPartitioner in Producer side to implement a custom logic for allocating partitions for a produced message.
+
+4) Implement a Producer & Consumer which uses Avro format and Schema Registry
+
+5) Try out different connectors to transfer message to and fro from a Kafka topic to Database table, File, Queues etc
+
+6) Try out the REST API (Proxy) to produce and consume messages
+
+7) Perform aggregation and windowing functions using KTable & KStreams 
+
+8) Try out KSQL streams and windowing
