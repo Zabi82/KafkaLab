@@ -30,21 +30,21 @@ Download and install 7zip if you don't have it in your PC
 
 ### Download & Install Apache Kafka
 
-Download Kafka 2.2.0 tgz file from https://www-us.apache.org/dist/kafka/2.2.0/kafka_2.12-2.2.0.tgz
+Download Kafka 2.5.0 tgz file from https://downloads.apache.org/kafka/2.5.0/kafka_2.12-2.5.0.tgz
 
-Unzip the tgz file using 7zip or using tar -xzf kafka_2.12-2.2.0.tgz
+Unzip the tgz file using 7zip or using tar -xzf kafka_2.12-2.5.0.tgz
 
 #### Start Zookeeper
 
 cd <kafka_installation_folder>/bin/windows    (For Linux cd <kafka_installation_folder>/bin)	
    
-zookeeper-server-start.bat ../../config/zookeeper.properties (For Linux, use the .sh file from bin directory with correct relative path to config file)
+zookeeper-server-start.bat ..\..\config\zookeeper.properties (For Linux, use the .sh file from bin directory with correct relative path to config file)
 
 #### Start Kafka Broker
 
 cd <kafka_installation_folder>/bin/windows    (For Linux cd <kafka_installation_folder>/bin)
 
-kafka-server-start.bat ../../config/server.properties (For Linux, use the .sh file from bin directory with correct relative path to config file)
+kafka-server-start.bat ..\..\config\server.properties (For Linux, use the .sh file from bin directory with correct relative path to config file)
 
 ### Exercise 1 - Kafka Command Line Producer & Consumer (Simple messages)
 
