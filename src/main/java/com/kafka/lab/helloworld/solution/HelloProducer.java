@@ -21,7 +21,7 @@ public class HelloProducer {
 		KafkaProducer<String, String> kafkaProducer = new KafkaProducer<>(props);
 
 		for (int i = 0; i < numMessages; i++) {
-			String key = "Key" + i;
+			String key =  "Key" + i;
 			String value = "Value" + i;
 			ProducerRecord<String, String> record = new ProducerRecord<>(HELLO_TOPIC, key, value);
 
@@ -44,6 +44,6 @@ public class HelloProducer {
 
 	public static void main(String[] args) {
 		HelloProducer producer = new HelloProducer();
-		producer.produceMessage(10);
+		producer.produceMessage(1000);
 	}
 }

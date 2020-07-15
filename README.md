@@ -240,7 +240,15 @@ as all messages are consumed
 
 ### Exercise 7 - Kafka Streaming Example
 
-Load sample weather data from resources/weather-data.csv (key value pair of date and temperature in celsius) to a topic daily_temperature_celsius
+Create the following topics with 1 partition and replication factor 1 
+
+```
+daily_temperature_celsius
+daily_temperature_farenheit
+hot_days
+```
+
+Generate random weather data to a topic daily_temperature_celsius
 (Run StreamProducer.java in com.kafka.lab.stream.solution package)
 
 Using Kafka Streams, convert the celsius value to farenheit and write results to a new topic daily_temperature_farenheit (value should be Double)
