@@ -24,7 +24,7 @@ public class HelloProducer {
 			String key =  "Key" + i;
 			String value = "Value" + i;
 			ProducerRecord<String, String> record = new ProducerRecord<>(HELLO_TOPIC, key, value);
-
+			//call back handler lambda for to evaluate the result of sending a record
 			kafkaProducer.send(record, (recordMetaData, exception) -> {
 				if (recordMetaData != null) {
 					System.out.printf("Produced message with key = %s and value = %s in topic = %s and partition = %s with offset = %s \n",
@@ -44,6 +44,6 @@ public class HelloProducer {
 
 	public static void main(String[] args) {
 		HelloProducer producer = new HelloProducer();
-		producer.produceMessage(1000);
+		producer.produceMessage(10);
 	}
 }

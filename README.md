@@ -2,11 +2,15 @@
 
 ## Lab exercises will be using Kafka Client for Java
 
-## Prerequisites for this lab as follows
+## Prerequisites for this lab as follows (unless a pre-defined lab setup is already provided)
 
-### Install JDK
+### OS for the lab
 
-Download & Install JDK 8 (Update 31 or later) - https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+Linux distribution (e.g. Ubuntu) preferred. Can manage with Windows as well
+
+### Install JDK 11
+
+Download & Install JDK 11 preferably AdoptOpenJDK  - https://adoptopenjdk.net/installation.html
 
 Set JAVA_HOME environment variable pointing to the JDK folder (Path variable to JAVA_HOME/bin should be setup as part of installation)
 
@@ -14,47 +18,55 @@ Verify java version -> java -version
 
 ### Install Java IDE
 
-Download & Install Eclipse IDE (https://www.eclipse.org/downloads/) or your other favourite Java IDE (IntelliJ)
+Download & Install Intellij (https://www.jetbrains.com/idea/download) or Eclipse IDE (https://www.eclipse.org/downloads/packages/) or your other favourite Java IDE
 
 ### Install Maven
 
-Download & Install Maven (https://www-eu.apache.org/dist/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.zip)
+Download & Install Maven (https://maven.apache.org/install.html)
 
 Set M2_HOME environment variable pointing to the Maven installation folder. Add path variable for M2_HOME/bin as well
 
 Verify maven version -> mvn -version
 
-### Install 7Zip
+### Install 7Zip if using windows
 
 Download and install 7zip if you don't have it in your PC
 
-### Download & Install Apache Kafka
+### Download & Install Confluent Kafka
 
-Download Kafka 2.5.0 tgz file from https://downloads.apache.org/kafka/2.5.0/kafka_2.12-2.5.0.tgz
+Download Confluent Kafka (community edition) version 6.2.1 (http://packages.confluent.io/archive/6.2/confluent-community-6.2.0.tar.gz)
 
-Unzip the tgz file using 7zip or using tar -xzf kafka_2.12-2.5.0.tgz
+Unzip/ the tgz file using 7zip or using tar -xvf confluent-community-6.2.0.tar.gz
 
-#### Start Zookeeper
+#### Start Zookeeper (Training Lab still uses zookeeper instead of Kafka's inbuilt cluster coordinator Raft as it's still production ready)
 
-cd <kafka_installation_folder>/bin/windows    (For Linux cd <kafka_installation_folder>/bin)	
-   
-zookeeper-server-start.bat ..\..\config\zookeeper.properties (For Linux, use the .sh file from bin directory with correct relative path to config file)
+cd <confluent_kafka_installation_folder>/bin
+
+nohup ./zookeeper-server-start ../etc/kafka/zookeeper.properties &
+
+For windows , cd <confluent_kafka_installation_folder>/bin/windows
+
+zookeeper-server-start.bat ..\..\etc\zookeeper.properties)
 
 #### Start Kafka Broker
 
-cd <kafka_installation_folder>/bin/windows    (For Linux cd <kafka_installation_folder>/bin)
+cd <confluent_kafka_installation_folder>/bin
 
-kafka-server-start.bat ..\..\config\server.properties (For Linux, use the .sh file from bin directory with correct relative path to config file)
+nohup ./kafka-server-start ../etc/kafka/server.properties &
+
+For windows, cd <kafka_installation_folder>/bin/windows    
+
+kafka-server-start.bat ..\..\etc\kafka\server.properties 
 
 ### Exercise 1 - Kafka Command Line Producer & Consumer (Simple messages)
 
 #### Command line producer 
 
-Open a command prompt / shell and cd to <KAFKA_HOME>/bin/windows (<KAFKA_HOME>/bin in case of Linux) and type the below command
+Open a command prompt / shell and cd to <KAFKA_HOME>/bin (<KAFKA_HOME>\bin\windows in case of Windows) and type the below command
 
 ```
 
- kafka-console-producer --broker-list localhost:9092 --topic My_Topic
+ kafka-console-producer ----bootstrap-server localhost:9092 --topic My_Topic
 
 ```
 
@@ -90,7 +102,7 @@ Run a command line producer to inject messages with key and values as given belo
 
 ```
 
- kafka-console-producer --broker-list localhost:9092 --topic My_Topic_KV 
+ ./kafka-console-producer --bootstrap-server localhost:9092 --topic My_Topic_KV \
  --property parse.key=true --property key.separator=,
 
 ```
@@ -105,10 +117,10 @@ Type messages with keys and values separated by commas
 
 ```
 
-Run another command line to consumer the key value pairs produced by the producer
+Run another command line consumer to consume the key value pairs produced by the producer
 
 ```
-kafka-console-consumer --bootstrap-server localhost:9092 --from-beginning 
+./kafka-console-consumer --bootstrap-server localhost:9092 --from-beginning \
 --topic My_Topic_KV --property print.key=true
 
 ```
@@ -121,13 +133,13 @@ Create a topic manually using command line tool with 2 partitions
 
 ```
 
-kafka-topics --zookeeper localhost:2181 --create --topic My_Topic_P2 --partitions 2 --replication-factor 1
+./kafka-topics --bootstrap-server localhost:9092 --create --topic My_Topic_P2 --partitions 2 --replication-factor 1
 
 ```
 Run a command line producer for the above topic and type messages from 1 to 10
 
 ```
-kafka-console-producer --broker-list localhost:9092 --topic My_Topic_P2
+./kafka-console-producer --bootstrap-server localhost:9092 --topic My_Topic_P2
 
 >1
 >2
@@ -142,23 +154,26 @@ Run a command line consumer to consume above messages
 
 ```
 
-kafka-console-consumer --bootstrap-server localhost:9092 --from-beginning --topic My_Topic_P2
+./kafka-console-consumer --bootstrap-server localhost:9092 --from-beginning --topic My_Topic_P2 --property print.partition=true --property print.offset=true
  
 ```
 
 Observe that the messages are not consumed in the same order in which it is produced. This is because the consumer consumes set of messages 
 from each of the 2 partitions of the topic and ordering is guaranteed only within a partition
 
+Also try to produce new messages from producer console one by one and since there is no keys provided it will mostly get assigned to random \
+in a round-robin fashion. if you produce messages faster messages might be batched together and an entire batch might land in the same partition
+
 Try to consume from 3 command line consumer windows with same consumer group id and observe that only two receives data as we have only two partitions
 
 ```
 
-kafka-console-consumer --bootstrap-server localhost:9092 --from-beginning --topic My_Topic_P2 --group MyGroup
+./kafka-console-consumer --bootstrap-server localhost:9092 --from-beginning --topic My_Topic_P2 --group MyGroup --property print.partition=true --property print.offset=true
  
 ```
 
-The 3rd consumer within the consumer group won't be receiving messages.
-Try to stop the 1st or 2nd consumer window and observe that now the 3rd consumer is assigned the partition earlier read by the stopped consumer
+One of the consumer within the consumer group won't be receiving messages and is found idle.
+Try to stop the one of the active consumer and observe that now that the earlier idle consumer is assigned the partition earlier read by the stopped consumer
 
 
 
@@ -168,60 +183,36 @@ Describe the details of the topic created in the previous exercises
 
 ```
 
-kafka-topics --describe --bootstrap-server localhost:9092 --topic My_Topic_P2
+./kafka-topics --describe --bootstrap-server localhost:9092 --topic My_Topic_P2
 
 ```
 Partition 0 & 1 represents the 2 partitions
 
-Leader 0 indicates the leader for both the partitions are present in the broker with id 0( Refer server.properties , broker.id = 0) 
+Leader 0 indicates the leader for both the partitions are present in the broker with id 0( Refer server.properties , broker.id = 0). 
+After all we have only 1 broker 
 
-Replication 0 indicates the replica for the parition also resides in the broker with id 0
+Replication 0 indicates the replica for the partition also resides in the broker with id 0 which is in fact the leader partition itself
 
-### Exercise 5 - Zookeeper Shell
+Replication factor cannot be greater than the number of brokers. Replication factor indicates the number of copies of data in a partition including leader & followers
 
-Kafka’s data in ZooKeeper can be accessed using the zookeeper-shell command:
-
-```
-zookeeper-shell localhost:2181
-
-```
-
-From within the zookeeper-shell application, type ls / to view the directory structure in ZooKeeper. 
-
-```
-ls /
-
-	[schema_registry, cluster, controller_epoch, controller, brokers, zookeeper, admin,
-	isr_change_notification, consumers, config]
-
-ls /brokers
-
-    [ids, topics, seqid]
-	
-ls /brokers/ids
-   
-    [0]
-	
-ls /brokers/topics
-
-    [My_Topic, __consumer_offsets, My_Topic_KV]	
-
-```
-
-__consumer_offsets is a special topic which keeps tracks of the consumer offsets for different topics/partitions
-
-Press Ctrl + C to exit the shell
-
-### Exercise 6 - Simple Producer & Consumer using Kafka Java Client
+### Exercise 5 - Simple Producer & Consumer using Kafka Java Client
 
 Download / clone this project 
 
-Import the project into Eclipse or your favourite IDE
+Import the project into Intellij or Eclipse or any of your other favourite IDE
 
 Create a new topic "hello_world_topic" with 2 partitions and replication factor 1 
 
-Write a java producer and consumer programs to produce and consume from the above topic. Refer to the partial java classes and the full solution 
-under com.kafka.lab.helloworld.partial and com.kafka.lab.helloworld.solution packages respectively
+```
+
+./kafka-topics --bootstrap-server localhost:9092 --create --topic hello_world_topic --partitions 2 --replication-factor 1
+
+```
+
+
+Write a java producer and consumer programs to produce and consume from the above topic. Refer to java classes namely HelloProducer 
+and HelloConsumer which has both a partial and  the full solution under com.kafka.lab.helloworld.partial and com.kafka.lab.helloworld.solution packages
+respectively
 
 Try to run the consumer with different consumer group id and observe that the new consumer gets a complete copy of the messages
 
@@ -230,7 +221,7 @@ to check the offsets for each partition and the lag for the consumer
 
 ```
 
-kafka-consumer-groups --bootstrap-server localhost:9092 --describe --group testgroup
+./kafka-consumer-groups --bootstrap-server localhost:9092 --describe --group testgroup
 
 ```
  
@@ -238,7 +229,19 @@ Now run the consumer again and recheck the above command and notice that the lag
 as all messages are consumed
 
 
-### Exercise 7 - Kafka Streaming Example
+### Exercise 8 - Understanding different producer and consumer configuration options
+
+1) seeking to beginning offset, end offset or specific offsets - Refer HelloConsumerSeekOffset
+2) committing offsets manually using commitySync and commitAsynch methods - Refer HelloConsumerManualCommit
+3) Custom Partitioner in producer - Refer MyCustomPartitioner and HelloProducerWithCustomPartitioner
+4) Re-balancing Listener - Refer HelloConsumerCommitOnRebalance
+
+
+### Exercise 9 - Producing & Consuming from Kafka using Spring
+
+Producing and consuming of messages using Spring Framework
+
+### Exercise 10 - Kafka Streaming Example
 
 Create the following topics with 1 partition and replication factor 1 
 
@@ -258,6 +261,10 @@ Also filter all temperatures greater than 31 degree celsius and write to new top
 Refer to the partial java classes and the full solution in com.kafka.lab.stream.partial and com.kafka.lab.stream.soluton packages respectively
 
 Write Consumers for the topics and inspect the data
+
+
+### Exercise 11 - Kafka Streaming Example using Spring Cloud Stream
+
 
 ### DIY Exercises
 
