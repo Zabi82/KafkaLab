@@ -1,43 +1,3 @@
-# KafkaLab
-
-## Lab exercises will be using Kafka Client for Java
-
-## Prerequisites for this lab as follows (unless a pre-defined lab setup is already provided)
-
-### OS for the lab
-
-Linux distribution (e.g. Ubuntu) preferred. Can manage with Windows as well
-
-### Install JDK 11
-
-Download & Install JDK 11 preferably AdoptOpenJDK  - https://adoptopenjdk.net/installation.html
-
-Set JAVA_HOME environment variable pointing to the JDK folder (Path variable to JAVA_HOME/bin should be setup as part of installation)
-
-Verify java version -> java -version
-
-### Install Java IDE
-
-Download & Install Intellij (https://www.jetbrains.com/idea/download) or Eclipse IDE (https://www.eclipse.org/downloads/packages/) or your other favourite Java IDE
-
-### Install Maven
-
-Download & Install Maven (https://maven.apache.org/install.html)
-
-Set M2_HOME environment variable pointing to the Maven installation folder. Add path variable for M2_HOME/bin as well
-
-Verify maven version -> mvn -version
-
-### Install 7Zip if using windows
-
-Download and install 7zip if you don't have it in your PC
-
-### Download & Install Confluent Kafka
-
-Download Confluent Kafka (community edition) version 6.2.1 (http://packages.confluent.io/archive/6.2/confluent-community-6.2.0.tar.gz)
-
-Unzip/ the tgz file using 7zip or using tar -xvf confluent-community-6.2.0.tar.gz
-
 #### Start Zookeeper (Training Lab still uses zookeeper instead of Kafka's inbuilt cluster coordinator Raft as it's still production ready)
 
 cd <confluent_kafka_installation_folder>/bin
@@ -54,13 +14,13 @@ cd <confluent_kafka_installation_folder>/bin
 
 nohup ./kafka-server-start ../etc/kafka/server.properties &
 
-For windows, cd <kafka_installation_folder>/bin/windows    
+For windows, cd <kafka_installation_folder>/bin/windows
 
-kafka-server-start.bat ..\..\etc\kafka\server.properties 
+kafka-server-start.bat ..\..\etc\kafka\server.properties
 
 ### Exercise 1 - Kafka Command Line Producer & Consumer (Simple messages)
 
-#### Command line producer 
+#### Command line producer
 
 Open a command prompt / shell and cd to <KAFKA_HOME>/bin (<KAFKA_HOME>\bin\windows in case of Windows) and type the below command
 
@@ -70,11 +30,11 @@ Open a command prompt / shell and cd to <KAFKA_HOME>/bin (<KAFKA_HOME>\bin\windo
 
 ```
 
-Type the messages to be sent to the topic in the prompt 
+Type the messages to be sent to the topic in the prompt
 
 Here the topics are automatically created since it's not present already
 
-#### Command line consumer 
+#### Command line consumer
 
 Open another command prompt / shell and cd to <KAFKA_HOME>/bin/windows (<KAFKA_HOME>/bin in case of Linux) and type the below command
 
@@ -90,12 +50,12 @@ Type more messages in the producer console and observe that being consumed by th
 
 Stop and re-run the consumer and observe that it consumes messages from beginning
 
-Also try to stop the consumer again and now re-run the consumer without the --from-beginning option 
+Also try to stop the consumer again and now re-run the consumer without the --from-beginning option
 and observe that it doesn't consume anything unless you type new messages in the producer prompt
 
 ### Exercise 2 - Kafka Command Line Producer & Consumer (Messages with key and values)
 
-By default, kafka-console-producer and kafka-console-consumer assumes null keys for the messages. 
+By default, kafka-console-producer and kafka-console-consumer assumes null keys for the messages.
 It is possible to write and read with keys as well as values. Re-run the Producer with additional arguments to write (key,value) pairs to the Topic
 
 Run a command line producer to inject messages with key and values as given below
@@ -158,7 +118,7 @@ Run a command line consumer to consume above messages
  
 ```
 
-Observe that the messages are not consumed in the same order in which it is produced. This is because the consumer consumes set of messages 
+Observe that the messages are not consumed in the same order in which it is produced. This is because the consumer consumes set of messages
 from each of the 2 partitions of the topic and ordering is guaranteed only within a partition
 
 Also try to produce new messages from producer console one by one and since there is no keys provided it will mostly get assigned to random \
@@ -235,8 +195,8 @@ Describe the details of the topic created in the previous exercises
 ```
 Partition 0 & 1 represents the 2 partitions
 
-Leader 0 indicates the leader for both the partitions are present in the broker with id 0( Refer server.properties , broker.id = 0). 
-After all we have only 1 broker 
+Leader 0 indicates the leader for both the partitions are present in the broker with id 0( Refer server.properties , broker.id = 0).
+After all we have only 1 broker
 
 Replication 0 indicates the replica for the partition also resides in the broker with id 0 which is in fact the leader partition itself
 
@@ -244,11 +204,11 @@ Replication factor cannot be greater than the number of brokers. Replication fac
 
 ### Exercise 6 - Simple Producer & Consumer using Kafka Java Client
 
-Download / clone this project 
+Download / clone this project
 
 Import the project into Intellij or Eclipse or any of your other favourite IDE
 
-Create a new topic "hello_world_topic" with 2 partitions and replication factor 1 
+Create a new topic "hello_world_topic" with 2 partitions and replication factor 1
 
 ```
 
@@ -257,13 +217,13 @@ Create a new topic "hello_world_topic" with 2 partitions and replication factor 
 ```
 
 
-Write a java producer and consumer programs to produce and consume from the above topic. Refer to java classes namely HelloProducer 
+Write a java producer and consumer programs to produce and consume from the above topic. Refer to java classes namely HelloProducer
 and HelloConsumer which has both a partial and  the full solution under com.kafka.lab.helloworld.partial and com.kafka.lab.helloworld.solution packages
 respectively
 
 Try to run the consumer with different consumer group id and observe that the new consumer gets a complete copy of the messages
 
-Stop the consumer and run the producer once again to inject new messages in the topic. Before starting the consumer again run below command 
+Stop the consumer and run the producer once again to inject new messages in the topic. Before starting the consumer again run below command
 to check the offsets for each partition and the lag for the consumer
 
 ```
@@ -271,8 +231,8 @@ to check the offsets for each partition and the lag for the consumer
 ./kafka-consumer-groups --bootstrap-server localhost:9092 --describe --group test-group
 
 ```
- 
-Now run the consumer again and recheck the above command and notice that the lag is now 0 in both partitions 
+
+Now run the consumer again and recheck the above command and notice that the lag is now 0 in both partitions
 as all messages are consumed
 
 
@@ -287,46 +247,3 @@ as all messages are consumed
 ### Exercise 8 - Producing & Consuming from Kafka using Spring Boot
 
 Simple use case of Producing and consuming of messages using Spring Boot. Clone the project https://github.com/Zabi82/KafkaLabBoot for this exercise
-
-### Exercise 9 - Kafka Streaming Example
-
-Create the following topics with 1 partition and replication factor 1 
-
-```
-daily_temperature_celsius
-daily_temperature_farenheit
-hot_days
-```
-
-Generate random weather data to a topic daily_temperature_celsius
-(Run StreamProducer.java in com.kafka.lab.stream.solution package)
-
-Using Kafka Streams, convert the celsius value to farenheit and write results to a new topic daily_temperature_farenheit (value should be Double)
-
-Also filter all temperatures greater than 31 degree celsius and write to new topic hot_days 
-
-Refer to the partial java classes and the full solution in com.kafka.lab.stream.partial and com.kafka.lab.stream.soluton packages respectively
-
-Write Consumers for the topics and inspect the data
-
-
-### Exercise 10 - Kafka Streaming Example using Spring Cloud Stream
-
-
-### DIY Exercises
-
-1) Write a consumer which consumes all messages from a Topic whenever it is started
-
-2) Setup a 3 node cluster within your local machine and verify your understanding of replication
-
-3) Implement a CustomPartitioner in Producer side to implement a custom logic for allocating partitions for a produced message.
-
-4) Implement a Producer & Consumer which uses Avro format and Schema Registry
-
-5) Try out different connectors to transfer message to and fro from a Kafka topic to Database table, File, Queues etc
-
-6) Try out the REST API (Proxy) to produce and consume messages
-
-7) Perform aggregation and windowing functions using KTable & KStreams 
-
-8) Try out KSQL streams and windowing

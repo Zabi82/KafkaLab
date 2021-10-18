@@ -1,0 +1,6 @@
+---
+classes:
+  - exercises:
+      # `file` is relative to .strigo directory
+      - file: "../Lab1.md"
+        title: "Exercises for Lab #1"
