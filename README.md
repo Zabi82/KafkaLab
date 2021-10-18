@@ -311,6 +311,15 @@ Write Consumers for the topics and inspect the data
 
 
 ### Exercise 10 - Kafka Streaming Example using Spring Cloud Stream
+TBD
+
+### Exercise 11 - Kafka Connect 
+
+TBD
+
+### Exercise 12 - KSQL DB exercises
+
+TBD
 
 
 ### DIY Exercises
