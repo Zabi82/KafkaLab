@@ -32,8 +32,8 @@ public class HelloConsumerManualCommit {
                 ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(timeout));
                 if(!records.isEmpty()) {
 					for (ConsumerRecord<String, String> record : records) {
-						System.out.printf("partition = %d, offset = %d, key = %s, value = %s\n", record.partition(),
-								record.offset(), record.key(), record.value());
+                        System.out.printf("Consumed message from topic = %s, partition = %d, offset = %d, key = %s, value = %s\n", record.topic(), record.partition(),
+                                record.offset(), record.key(), record.value());
 					}
 
 					//synchronous commit which waits and performs retry in case of failure
