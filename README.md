@@ -66,7 +66,7 @@ Open a command prompt / shell and cd to <KAFKA_HOME>/bin (<KAFKA_HOME>\bin\windo
 
 ```
 
- kafka-console-producer ----bootstrap-server localhost:9092 --topic My_Topic
+ ./kafka-console-producer --bootstrap-server localhost:9092 --topic My_Topic
 
 ```
 
@@ -80,7 +80,7 @@ Open another command prompt / shell and cd to <KAFKA_HOME>/bin/windows (<KAFKA_H
 
 ```
 
- kafka-console-consumer --bootstrap-server localhost:9092 --from-beginning --topic My_Topic
+ ./kafka-console-consumer --bootstrap-server localhost:9092 --from-beginning --topic My_Topic
 
 ```
 
@@ -284,11 +284,15 @@ as all messages are consumed
 4) Re-balancing Listener - Refer HelloConsumerCommitOnRebalance
 
 
-### Exercise 8 - Producing & Consuming from Kafka using Spring Boot
+### Exercise 8 - Kafka .Net client example
+
+Please refer to the github repository https://github.com/Zabi82/KafkaDotNet for a .Net example of producer and consumer
+
+### Exercise 9 - Producing & Consuming from Kafka using Spring Boot
 
 Simple use case of Producing and consuming of messages using Spring Boot. Clone the project https://github.com/Zabi82/KafkaLabBoot for this exercise
 
-### Exercise 9 - Kafka Streaming Example
+### Exercise 10 - Kafka Streaming Example
 
 Create the following topics with 1 partition and replication factor 1 
 
@@ -310,14 +314,14 @@ Refer to the partial java classes and the full solution in com.kafka.lab.stream.
 Write Consumers for the topics and inspect the data
 
 
-### Exercise 10 - Kafka Streaming Example using Spring Cloud Stream
+### Exercise 11 - Kafka Streaming Example using Spring Cloud Stream
 TBD
 
-### Exercise 11 - Kafka Connect 
+### Exercise 12 - Kafka Connect 
 
 TBD
 
-### Exercise 12 - KSQL DB exercises
+### Exercise 13 - KSQL DB exercises
 
 TBD
 

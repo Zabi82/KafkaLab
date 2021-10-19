@@ -26,7 +26,7 @@ Open a command prompt / shell and cd to <KAFKA_HOME>/bin (<KAFKA_HOME>\bin\windo
 
 ```
 
- kafka-console-producer ----bootstrap-server localhost:9092 --topic My_Topic
+ ./kafka-console-producer --bootstrap-server localhost:9092 --topic My_Topic
 
 ```
 
@@ -40,7 +40,7 @@ Open another command prompt / shell and cd to <KAFKA_HOME>/bin/windows (<KAFKA_H
 
 ```
 
- kafka-console-consumer --bootstrap-server localhost:9092 --from-beginning --topic My_Topic
+ ./kafka-console-consumer --bootstrap-server localhost:9092 --from-beginning --topic My_Topic
 
 ```
 
@@ -243,7 +243,10 @@ as all messages are consumed
 3) Custom Partitioner in producer - Refer MyCustomPartitioner and HelloProducerWithCustomPartitioner
 4) Re-balancing Listener - Refer HelloConsumerCommitOnRebalance
 
+### Exercise 8 - Kafka .Net client example
 
-### Exercise 8 - Producing & Consuming from Kafka using Spring Boot
+Please refer to the github repository https://github.com/Zabi82/KafkaDotNet for a .Net example of producer and consumer 
+
+### Exercise 9 - Producing & Consuming from Kafka using Spring Boot
 
 Simple use case of Producing and consuming of messages using Spring Boot. Clone the project https://github.com/Zabi82/KafkaLabBoot for this exercise
