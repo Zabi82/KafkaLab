@@ -2,5 +2,5 @@
 classes:
   - exercises:
       # `file` is relative to .strigo directory
-      - file: "../Lab1.md"
-        title: "Exercises for Lab #1"
+      - file: "../Lab2.md"
+        title: "Exercises for Lab #2"

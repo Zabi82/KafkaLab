@@ -9,8 +9,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 
-import com.fasterxml.jackson.databind.deser.std.NumberDeserializers.IntegerDeserializer;
-import com.fasterxml.jackson.databind.deser.std.NumberDeserializers.LongDeserializer;
+import static com.kafka.lab.stream.solution.TopicConstants.DAILY_TEMP_FARENHEIT_TOPIC;
 
 public class TempFarenheitConsumer {
 
@@ -28,7 +27,7 @@ public class TempFarenheitConsumer {
 		// StickyAssignor.class.getName());
 
 		try (KafkaConsumer<Long, Integer> consumer = new KafkaConsumer<>(props)) {
-			consumer.subscribe(Arrays.asList("daily_temperature_farenheit"));
+			consumer.subscribe(Arrays.asList(DAILY_TEMP_FARENHEIT_TOPIC));
 
 			while (true) {
 				ConsumerRecords<Long, Integer> records = consumer.poll(Duration.ofMillis(timeout));

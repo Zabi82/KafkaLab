@@ -2,20 +2,16 @@ package com.kafka.lab.stream.solution;
 
 import java.math.BigDecimal;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
-import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.KTable;
-import org.apache.kafka.streams.kstream.Materialized;
-import org.apache.kafka.streams.kstream.Produced;
-import org.apache.kafka.streams.kstream.Serialized;
-import org.apache.kafka.streams.kstream.TimeWindows;
-import org.apache.kafka.streams.kstream.Windowed;
+import org.apache.kafka.streams.kstream.*;
+
+import static com.kafka.lab.stream.solution.TopicConstants.DAILY_TEMP_CELSIUS_TOPIC;
+import static com.kafka.lab.stream.solution.TopicConstants.HOT_DAYS_TOPIC;
 
 /**
  * Streams data from daily_temperature_celsius, converts temperature to
@@ -26,6 +22,9 @@ import org.apache.kafka.streams.kstream.Windowed;
  *
  */
 public class StreamProcessor {
+
+	public static final BigDecimal HOT_TEMP = new BigDecimal(31);
+
 
 	public static void main(String[] args) throws Exception {
 
@@ -45,20 +44,26 @@ public class StreamProcessor {
 		StreamsBuilder builder = new StreamsBuilder();
 
 		// Read the input Kafka Topic into a KStream instance.
-		KStream<Long, Integer> tempCelsius = builder.stream("daily_temperature_celsius");
+		KStream<Long, Integer> tempCelsius = builder.stream(DAILY_TEMP_CELSIUS_TOPIC);
 
 		// Convert the values to farenheit
-		KStream<Long, Double> tempFarenheit = tempCelsius.mapValues((k,v) -> new Double(v * (9/5) + 32));
+		KStream<Long, Double> tempFarenheit = tempCelsius.mapValues((k,v) -> Double.valueOf(v * (9/5) + 32));
 		// Write the converted temperatures to another topic, use different value Serde
 		tempFarenheit.to("daily_temperature_farenheit", Produced.valueSerde(Serdes.Double()));
 
-		// Use filter() to get temperatures greater than 31 degree celsius
-		KStream<Long, Integer> hot_days = tempCelsius
-				.filter((k, v) -> new BigDecimal(v).compareTo(new BigDecimal(31)) > 0);
+		tempFarenheit.foreach((k, v) -> {
+			System.out.println(String.format("Temperature in farenheit topic key %s and value %s",k.toString() , v.toString() ));
+		});
 
-		// Write the hot temperatures to topic hot_days and print results
-		hot_days.through("hot_days").foreach((k, v) -> {
-			System.out.println(k.toString() + " - " + v.toString());
+		// Use filter() to get temperatures greater than 31 degree celsius and write to hot_days topic
+		tempCelsius.filter((k, v) -> new BigDecimal(v).compareTo(HOT_TEMP) > 0).to(HOT_DAYS_TOPIC);
+
+		KStream<Long, Integer> hotDaysStream = builder.stream(HOT_DAYS_TOPIC);
+
+		//Another way to print the stream contents
+		//hotDaysStream.print(Printed.toSysOut());
+		hotDaysStream.foreach((k, v) -> {
+			System.out.println(String.format("Hot temperature days topic key %s and value %s",k.toString() , v.toString() ));
 		});
 		
 		

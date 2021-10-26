@@ -8,6 +8,9 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.IntegerSerializer;
 import org.apache.kafka.common.serialization.LongSerializer;
+
+import static com.kafka.lab.stream.solution.TopicConstants.DAILY_TEMP_CELSIUS_TOPIC;
+
 /**
  * Produces random stream of daily temperatures in celcius every few seconds
  * @author zabeer
@@ -17,11 +20,10 @@ public class StreamDataProducer {
 
 	public static final Integer MIN_TEMP = 25;
 	public static final Integer MAX_TEMP = 35;
+	public static final int TWO_SECONDS = 2000;
 
 	public static void main(String[] args) throws Exception {
 
-		Random random = new Random();
-		System.out.println(random.ints(MIN_TEMP, (MAX_TEMP + 1)).findFirst().getAsInt());
 		Properties props = new Properties();
 		props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
 		props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, LongSerializer.class);
@@ -33,7 +35,7 @@ public class StreamDataProducer {
 			while (true) {
 
 				Integer temp = getRandomTemp();
-				ProducerRecord<Long, Integer> record = new ProducerRecord<>("daily_temperature_celsius", counter,
+				ProducerRecord<Long, Integer> record = new ProducerRecord<>(DAILY_TEMP_CELSIUS_TOPIC, counter,
 						getRandomTemp());
 
 				kafkaProducer.send(record);
@@ -42,7 +44,7 @@ public class StreamDataProducer {
 				counter++;
 				
 				//sleep 2 sec
-				Thread.sleep(2000);
+				Thread.sleep(TWO_SECONDS);
 			}
 
 		}
