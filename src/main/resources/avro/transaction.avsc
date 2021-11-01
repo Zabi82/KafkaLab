@@ -1,0 +1,13 @@
+{
+  "namespace" : "com.kafka.lab.model",
+  "type" : "record",
+  "name" : "Transaction",
+  "fields" : [
+    {"name":"id","type":"string"},
+    {"name":"amount", "type":"double"},
+    {"name":"debitOrCredit", "type":"string"},
+    {"name":"accountNumber", "type":"string"},
+    {"name":"date", "type":"long"}
+
+   ]
+}

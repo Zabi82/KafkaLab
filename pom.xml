@@ -20,6 +20,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 		<slf4j.version>1.7.21</slf4j.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<confluent.version>6.2.0</confluent.version>
+		<avro.version>1.10.2</avro.version>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
@@ -42,12 +43,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 		<dependency>
 			<groupId>org.apache.avro</groupId>
 			<artifactId>avro</artifactId>
-			<version>1.7.7</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.avro</groupId>
-			<artifactId>avro-maven-plugin</artifactId>
-			<version>1.7.7</version>
+			<version>${avro.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.confluent</groupId>
@@ -62,7 +58,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	</dependencies>
 
 	<build>
-		<pluginManagement>
+
 			<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -75,22 +71,24 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 				<plugin>
 					<groupId>org.apache.avro</groupId>
 					<artifactId>avro-maven-plugin</artifactId>
-					<version>1.7.7</version>
+					<version>1.10.2</version>
 					<executions>
 						<execution>
 							<phase>generate-sources</phase>
 							<goals>
 								<goal>schema</goal>
+								<goal>protocol</goal>
+								<goal>idl-protocol</goal>
 							</goals>
 							<configuration>
-								<sourceDirectory>${project.basedir}/src/main/avro/</sourceDirectory>
-								<outputDirectory>${project.basedir}/src/main/java/</outputDirectory>
+								<sourceDirectory>src/main/resources/avro</sourceDirectory>
+								<outputDirectory>src/main/java</outputDirectory>
 							</configuration>
 						</execution>
 					</executions>
 				</plugin>
 
 			</plugins>
-		</pluginManagement>
+
 	</build>
 </project>
