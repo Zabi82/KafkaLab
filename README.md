@@ -334,7 +334,13 @@ high_value_txn_topic
 
 Simple use case of Producing and consuming of messages using Spring Cloud Stream. Clone the project https://github.com/Zabi82/SpringCloudStreamKafka for this exercise
 
-### Exercise 12 - Schema Registry / Avro 
+
+### Exercise 13 - Kafka Streaming .Net example
+
+Please refer to the repository https://github.com/Zabi82/KafkaStreamingDotNet/tree/master 
+
+
+### Exercise 14 - Schema Registry / Avro 
 
 Ensure the following properties are present and uncommented in <confluent_kafka_installation_folder>/etc/schema-registry
 
@@ -358,7 +364,7 @@ The Avro file is present in src/main/resources/avro/transaction.avsc. The java m
 Upon running the AvroProducer the schema will be registered in Schema Registry as it's not already present.
 The schema can be retrieved by performing a Http request using postman or curl with the URL http://localhost:8081/subjects/txn_topic_avro-value/versions/1
 
-### Exercise 13 - KSQL DB exercises
+### Exercise 15 - KSQL DB exercises
 
 Ensure the following properties are present and uncommented in <confluent_kafka_installation_folder>/etc/ksqldb
 
@@ -436,7 +442,7 @@ SET 'ksql.query.pull.table.scan.enabled'='true';
 SELECT * from account_balance where totalAmount < 0 ;
 
 ```
-### Exercise 14 - Kafka Connect
+### Exercise 16 - Kafka Connect
 
 Pre-requisites:
 

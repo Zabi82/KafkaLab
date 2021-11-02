@@ -27,3 +27,6 @@ Run the SentenceDataProducer to produce some sentence every few seconds. WordCou
 
 Simple use case of Producing and consuming of messages using Spring Cloud Stream. Clone the project https://github.com/Zabi82/SpringCloudStreamKafka for this exercise
 
+### Exercise 13 - Kafka Streaming .Net example
+
+Please refer to the repository https://github.com/Zabi82/KafkaStreamingDotNet/tree/master 
