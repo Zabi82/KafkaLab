@@ -102,4 +102,64 @@ SELECT * from account_balance where totalAmount < 0 ;
 ```
 ### Exercise 14 - Kafka Connect
 
-TBD
+Pre-requisites:
+
+Install SQLite Database. For ubuntu follow the instructions below to install SQLite and verify the installation (unless it's already present in the lab setup)
+```
+sudo apt-get update
+sudo apt-get install sqlite3
+sqlite3 --version
+```
+
+Download Kafka JDBC connectors
+
+Go to https://www.confluent.io/hub/confluentinc/kafka-connect-jdbc?_ga=2.245271109.1148558584.1635854760-884231590.1623215623 and click download
+
+Unzip and copy the directory "confluentinc-kafka-connect-jdbc-10.2.5" under <confluent_kafka_installation_folder>/etc
+
+Update the "plugin.path" property in <confluent_kafka_installation_folder>/etc/schema-registry/connect-avro-standalone.properties.
+Substitute <confluent_kafka_installation_folder> with actual path of installation in your environment
+
+```
+plugin.path=<confluent_kafka_installation_folder>/etc/confluentinc-kafka-connect-jdbc-10.2.5
+
+```
+
+Open a new terminal window and Launch SQLite and Create a new table and insert few records in sqlite. Launch this from HOME directory (e.g. /home/ubuntu)
+Create a table and insert rows
+
+```
+
+sqlite3 test.db
+
+CREATE TABLE contacts (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	first_name TEXT NOT NULL,
+	last_name TEXT NOT NULL,
+	email TEXT NOT NULL ,
+	phone TEXT NOT NULL 
+);
+
+insert into contacts (first_name, last_name, email, phone) values ('Mark' , 'Taylor', 'mark.taylor@nomail.com', '91098890991');
+insert into contacts (first_name, last_name, email, phone) values ('Tom' , 'Wood', 'tom.wood@nomail.com', '917878787');
+
+```
+
+Now update the "connection.url" property in <confluent_kafka_installation_folder>/etc/confluentinc-kafka-connect-jdbc-10.2.5/etc/source-quickstart-sqlite.properties
+Ensure the path to test.db is as per how it was created in previous step
+
+```
+connection.url=jdbc:sqlite:/home/ubuntu/test.db
+```
+
+Now launch the connector in standalone mode from <confluent_kafka_installation_folder>/bin directory
+
+```
+./connect-standalone ../etc/schema-registry/connect-avro-standalone.properties ../etc/confluentinc-kafka-connect-jdbc-10.2.5/etc/source-quickstart-sqlite.properties
+
+```
+
+Verify that the data from the sqlite table are pushed to a kafka topic. in this example the topic would be "test-sqlite-jdbc-contacts". Verify using a command line or a java consumer
+Verify that a new avro schema is registered too using postman or curl "http://localhost:8081/subjects/test-sqlite-jdbc-contacts-value/versions/1"
+
+
