@@ -6,7 +6,7 @@
 
 ### OS for the lab
 
-Linux distribution (e.g. Ubuntu) preferred. Can manage with Windows as well
+Linux distribution (e.g. Ubuntu) preferred. Can manage with Windows as well but not the ideal one
 
 ### Install JDK 11
 
@@ -34,11 +34,23 @@ Download and install 7zip if you don't have it in your PC
 
 ### Download & Install Confluent Kafka
 
-Download Confluent Kafka (community edition) version 6.2.1 (http://packages.confluent.io/archive/6.2/confluent-community-6.2.0.tar.gz)
+Download Confluent Kafka (community edition) version 7.3.1 (http://packages.confluent.io/archive/7.3/confluent-community-7.3.1.tar.gz)
 
-Unzip/ the tgz file using 7zip or using tar -xvf confluent-community-6.2.0.tar.gz
+Unzip/ the tgz file using 7zip or using tar -xvf confluent-community-7.3.1.tar.gz
 
-#### Start Zookeeper (Training Lab still uses zookeeper instead of Kafka's inbuilt cluster coordinator Raft as it's still production ready)
+
+#### Steps to run Kafka using KRaft mode (just for reference as current lab will use ZK based setup)
+
+cd <confluent_kafka_installation_folder>/bin
+
+KAFKA_CLUSTER_ID="$(./kafka-storage random-uuid)"
+
+./kafka-storage format -t $KAFKA_CLUSTER_ID -c ../etc/kafka/kraft/server.properties
+
+nohup ./kafka-server-start ../etc/kafka/kraft/server.properties
+
+
+#### Start Zookeeper (Training Lab still uses zookeeper instead of Kafka's inbuilt cluster coordinator as most current installations still use ZK)
 
 cd <confluent_kafka_installation_folder>/bin
 
@@ -173,7 +185,7 @@ Try to consume from 3 command line consumer windows with same consumer group id 
 ```
 
 One of the consumer within the consumer group won't be receiving messages and is found idle.
-Try to stop the one of the active consumer and observe that now that the earlier idle consumer is assigned the partition earlier read by the stopped consumer
+Try to stop one of the active consumer and observe that now that the earlier idle consumer is assigned the partition earlier read by the stopped consumer
 
 ### Exercise 4 - List Consumer Groups, Describe Consumer group to check lag,  Resetting offset
 
