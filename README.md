@@ -257,7 +257,7 @@ There are other options available based on reset requirement
 
     --to-earliest: Reset to the beginning of the data.
 
-    --to-lastest: Reset to the end of the topic.
+    --to-latest: Reset to the end of the topic.
 
     --to-offset: Reset to a known, fixed offset.
 
