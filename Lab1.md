@@ -1,8 +1,8 @@
-#### Start Zookeeper (Training Lab still uses zookeeper instead of Kafka's inbuilt cluster coordinator Raft as it's still production ready)
+#### Start Zookeeper (Training Lab still uses zookeeper instead of Kafka's inbuilt cluster coordinator as most current installations still use ZK)
 
 cd <confluent_kafka_installation_folder>/bin
 
-nohup ./zookeeper-server-start ../etc/kafka/zookeeper.properties &
+nohup ./zookeeper-server-start ../etc/kafka/zookeeper.properties > zk_out &
 
 For windows , cd <confluent_kafka_installation_folder>/bin/windows
 
@@ -12,7 +12,7 @@ zookeeper-server-start.bat ..\..\etc\zookeeper.properties)
 
 cd <confluent_kafka_installation_folder>/bin
 
-nohup ./kafka-server-start ../etc/kafka/server.properties &
+nohup ./kafka-server-start ../etc/kafka/server.properties > kafka_out &
 
 For windows, cd <kafka_installation_folder>/bin/windows
 
@@ -96,7 +96,7 @@ Create a topic manually using command line tool with 2 partitions
 ./kafka-topics --bootstrap-server localhost:9092 --create --topic My_Topic_P2 --partitions 2 --replication-factor 1
 
 ```
-Run a command line producer for the above topic and type messages from 1 to 10
+Run a command line producer for the above topic and type messages from 1 to 10 and close the producer by using ctrl + c
 
 ```
 ./kafka-console-producer --bootstrap-server localhost:9092 --topic My_Topic_P2
@@ -104,8 +104,7 @@ Run a command line producer for the above topic and type messages from 1 to 10
 >1
 >2
 >3
-.
-.
+>...
 >10
 
 ```
@@ -118,22 +117,53 @@ Run a command line consumer to consume above messages
  
 ```
 
-Observe that the messages are not consumed in the same order in which it is produced. This is because the consumer consumes set of messages
-from each of the 2 partitions of the topic and ordering is guaranteed only within a partition
+Observe that the messages are routed to the same partition and consumed in the same order in which it is produced. From Apache Kafka version 2.4 onwards,
+Kafka uses Sticky Partition Assignment strategy instead of Round Robin assignment when the keys are null to improve latency. A new producer session might
+result in the records assigned to a different partition.
 
-Also try to produce new messages from producer console one by one and since there is no keys provided it will mostly get assigned to random \
-in a round-robin fashion. if you produce messages faster messages might be batched together and an entire batch might land in the same partition
-
-Try to consume from 3 command line consumer windows with same consumer group id and observe that only two receives data as we have only two partitions
+Now try to produce messages with key and value and observe the ordering on the consumer side
 
 ```
 
-./kafka-console-consumer --bootstrap-server localhost:9092 --from-beginning --topic My_Topic_P2 --group MyGroup --property print.partition=true --property print.offset=true
+ ./kafka-console-producer --bootstrap-server localhost:9092 --topic My_Topic_P2 \
+ --property parse.key=true --property key.separator=,
+
+```
+
+Type messages with keys and values separated by commas
+
+```
+> 1,1
+> 2,2
+> 3,3
+> 4,4
+
+```
+
+Run another command line consumer to consume the key value pairs produced by the producer
+
+```
+./kafka-console-consumer --bootstrap-server localhost:9092 --from-beginning \
+--topic My_Topic_P2 --property print.key=true --property print.partition=true --property print.offset=true
+
+```
+
+Observe that the messages are not consumed in the same order in which it is produced. This is because the consumer consumes set of messages from each of
+the 2 partitions of the topic and ordering is guaranteed only within a partition.
+
+
+Now try to consume from 3 command line consumer windows from 3 different terminals with same consumer group id and observe that only two receives
+data as we have only two partitions
+
+```
+
+./kafka-console-consumer --bootstrap-server localhost:9092 --from-beginning --topic My_Topic_P2 --group MyGroup \
+--property print.key=true --property print.partition=true --property print.offset=true
  
 ```
 
 One of the consumer within the consumer group won't be receiving messages and is found idle.
-Try to stop the one of the active consumer and observe that now that the earlier idle consumer is assigned the partition earlier read by the stopped consumer
+Try to stop one of the active consumer and observe that now that the earlier idle consumer is assigned the partition earlier read by the stopped consumer
 
 ### Exercise 4 - List Consumer Groups, Describe Consumer group to check lag,  Resetting offset
 
@@ -174,7 +204,7 @@ There are other options available based on reset requirement
 
     --to-earliest: Reset to the beginning of the data.
 
-    --to-lastest: Reset to the end of the topic.
+    --to-latest: Reset to the end of the topic.
 
     --to-offset: Reset to a known, fixed offset.
 
@@ -243,9 +273,10 @@ as all messages are consumed
 3) Custom Partitioner in producer - Refer MyCustomPartitioner and HelloProducerWithCustomPartitioner
 4) Re-balancing Listener - Refer HelloConsumerCommitOnRebalance
 
+
 ### Exercise 8 - Kafka .Net client example
 
-Please refer to the github repository https://github.com/Zabi82/KafkaDotNet for a .Net example of producer and consumer 
+Please refer to the github repository https://github.com/Zabi82/KafkaDotNet for a .Net example of producer and consumer
 
 ### Exercise 9 - Producing & Consuming from Kafka using Spring Boot
 
