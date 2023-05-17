@@ -7,10 +7,7 @@ import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
-import org.apache.kafka.streams.kstream.Consumed;
-import org.apache.kafka.streams.kstream.ForeachAction;
-import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.Produced;
+import org.apache.kafka.streams.kstream.*;
 
 import java.util.Arrays;
 import java.util.Properties;
@@ -44,15 +41,15 @@ public class WordCountProcessor {
         final Pattern pattern = Pattern.compile("\\W+");
         KStream<String, String> textLines = builder.stream(INPUT_TEXT_TOPIC, Consumed.with(stringSerde, stringSerde));
 
-        KStream<String, Long> wordCounts = textLines
+        KTable<String, Long> wordCounts = textLines
                 .flatMapValues(value -> Arrays.asList(pattern.split(value.toLowerCase())))
                 .map((key, value) -> new KeyValue<>(value, value))
                 .filter((key, value) -> (!value.equals("the")))
                 .groupBy((key, value) -> value)
                 // Count the occurrences of each word (message key).
-                .count().toStream();
+                .count();
 
-        wordCounts.to(WORDCOUNT_OUTPUT_TOPIC, Produced.with(stringSerde, longSerde));
+        wordCounts.toStream().to(WORDCOUNT_OUTPUT_TOPIC, Produced.with(stringSerde, longSerde));
 
         KStream<String, Long> wordCountStream = builder.stream(WORDCOUNT_OUTPUT_TOPIC, Consumed.with(stringSerde, longSerde));
 
