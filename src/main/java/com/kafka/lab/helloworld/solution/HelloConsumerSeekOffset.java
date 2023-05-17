@@ -40,7 +40,7 @@ public class HelloConsumerSeekOffset {
 					//perform seekToBeginning or seekToEnd or seek to an arbitary offset as per requirement
 					//consumer.seekToBeginning(consumer.assignment());
 					//consumer.seekToEnd(consumer.assignment());
-					consumer.assignment().forEach(tp -> consumer.seek(consumer.assignment().iterator().next(), new OffsetAndMetadata(10, "no metadata")));
+					consumer.assignment().forEach(tp -> consumer.seek(tp, new OffsetAndMetadata(10, "no metadata")));
 					seekCompleted = true;
 					continue;
 				}
