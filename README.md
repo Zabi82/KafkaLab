@@ -329,7 +329,7 @@ as all messages are consumed
 
 ### Exercise 8 - Kafka .Net client example
 
-Please refer to the github repository https://github.com/Zabi82/KafkaDotNet for a .Net example of producer and consumer
+Please refer to the github repository https://github.com/Zabi82/KafkaLabDotNet for .Net examples corresponding to exercise 6 and 7
 
 ### Exercise 9 - Producing & Consuming from Kafka using Spring Boot
 
