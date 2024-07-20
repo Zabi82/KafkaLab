@@ -346,7 +346,7 @@ hot_days
 ```
 
 Generate random weather data to a topic daily_temperature_celsius
-(Run StreamProducer.java in com.kafka.lab.stream.solution package)
+(Run StreamDataProducer.java in com.kafka.lab.stream.solution package)
 
 Using Kafka Streams, convert the celsius value to farenheit and write results to a new topic daily_temperature_farenheit (value should be Double)
 
