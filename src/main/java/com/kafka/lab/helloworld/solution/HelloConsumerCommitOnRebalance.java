@@ -23,8 +23,11 @@ public class HelloConsumerCommitOnRebalance {
 
         public void onPartitionsRevoked(Collection<TopicPartition>
                                                 partitions) {
-            System.out.println("Lost partitions in rebalance, so committing current  offsets:" + currentOffsets);
+            System.out.println("following topic partitions revoked as part of rebalance");
+            partitions.forEach( tp -> System.out.printf("Topic %s , partition %s \n", tp.topic(), tp.partition()));
+            System.out.println("committing current  offsets before partition revoke" + currentOffsets);
             consumer.commitSync(currentOffsets);
+            partitions.forEach(tp -> currentOffsets.remove(tp));
         }
     }
 
@@ -35,7 +38,11 @@ public class HelloConsumerCommitOnRebalance {
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "test-group-rebalance");
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "test-group-rebalance-csa");
+
+        //Observe behavior of partition assignment during rebalancing with different partition assignment strategy
+        //props.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, "org.apache.kafka.clients.consumer.RoundRobinAssignor");
+        props.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, "org.apache.kafka.clients.consumer.CooperativeStickyAssignor");
 
 
 

@@ -324,7 +324,8 @@ as all messages are consumed
 1) seeking to beginning offset, end offset or specific offsets - Refer HelloConsumerSeekOffset
 2) committing offsets manually using commitySync and commitAsync methods - Refer HelloConsumerManualCommit
 3) Custom Partitioner in producer - Refer MyCustomPartitioner and HelloProducerWithCustomPartitioner
-4) Re-balancing Listener - Refer HelloConsumerCommitOnRebalance
+4) Re-balancing Listener - Refer HelloConsumerCommitOnRebalance - Observe the difference in behavior of how partitions
+   are assigned and revoked while using CooperativeStickyAssigner and RoundRobinAssigner strategies
 
 
 ### Exercise 8 - Kafka .Net client example
