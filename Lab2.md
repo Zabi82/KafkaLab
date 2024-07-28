@@ -19,6 +19,9 @@ Refer to the partial java classes and the full solution in com.kafka.lab.stream.
 
 Write Consumers for the topics and inspect the data or stream the output topics and print results
 
+Please refer to the github repository https://github.com/Zabi82/KafkaLabDotNet for .Net examples corresponding to this exercise
+
+
 ### Exercise 11 - Kafka Streaming Example - Word Count Example
 Create the following topics with 1 partition and replication factor 1
 
@@ -29,6 +32,8 @@ word_count_output_topic
 
 
 Run the SentenceDataProducer to produce some sentence every few seconds. WordCountProcessor streams this and performs a word count and outputs the results
+
+Please refer to the github repository https://github.com/Zabi82/KafkaLabDotNet for .Net examples corresponding to this exercise
 
 ### Exercise 12 - Kafka Streaming Example using Spring Cloud Stream
 Create the following topics with 1 partition and replication factor 1
